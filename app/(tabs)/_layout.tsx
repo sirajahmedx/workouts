@@ -1,5 +1,5 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function TabLayout() {
    return (
@@ -9,20 +9,19 @@ export default function TabLayout() {
             options={{
                title: "Home",
                tabBarIcon: ({ color }) => (
-                  <FontAwesome size={28} name="home" color={color} />
+                  <FontAwesome5 size={28} name="home" color={color} />
                ),
             }}
          />
          <Tabs.Screen
-            name="settings"
+            name="[name]"
             options={{
-               title: "Settings",
+               title: "Exercises",
                tabBarIcon: ({ color }) => (
-                  <FontAwesome size={28} name="cog" color={color} />
+                  <FontAwesome5 size={28} name="dumbbell" color={color} />
                ),
             }}
          />
       </Tabs>
    );
 }
-

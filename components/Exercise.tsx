@@ -1,8 +1,17 @@
-import { Link } from "expo-router";
 import React from "react";
+import { Link } from "expo-router";
 import { Pressable, StyleSheet, Text } from "react-native";
 
-function Exercise({ item }: any) {
+interface ExerciseProps {
+   item: {
+      name: string;
+      muscle: string;
+      equipment: string;
+      difficulty: string;
+   };
+}
+
+function Exercise({ item }: ExerciseProps) {
    return (
       <Link href={`/${item.name}`} asChild>
          <Pressable style={styles.exerciseContainer}>
@@ -25,43 +34,30 @@ function Exercise({ item }: any) {
    );
 }
 
-export default Exercise;
-
 const styles = StyleSheet.create({
    exerciseContainer: {
-      width: "90%",
-      alignItems: "center",
-      backgroundColor: "#f5f5f5",
-      padding: 8,
-      borderRadius: 8,
-      marginBottom: 8,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      elevation: 5,
-      alignSelf: "center",
+      padding: 15,
+      borderBottomWidth: 1,
+      borderBottomColor: "#333", // Dark border color
    },
    exerciseName: {
       fontSize: 18,
       fontWeight: "bold",
-      marginBottom: 8,
+      color: "#ffffff", // Bright white text color
    },
    exerciseDetails: {
       fontSize: 14,
-      color: "#888",
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-evenly",
+      color: "#dddddd", // Light grey text color
    },
    muscleText: {
-      fontWeight: "bold",
-      color: "#0099cc", // Light blue for muscle
+      color: "#ffffff", // Bright white text color
    },
    equipmentText: {
-      color: "#ff9900", // Orange for equipment
+      color: "#bbbbbb", // Light grey text color
    },
    difficultyText: {
-      color: "#ff0000", // Red for difficulty (assuming higher difficulty is more intense)
+      color: "#888888", // Medium grey text color
    },
 });
+
+export default Exercise;

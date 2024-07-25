@@ -1,12 +1,54 @@
-import { useState } from "react";
-import { Text, View, StyleSheet, ScrollView } from "react-native";
-import exercises from "@/data/exercises.json";
+import { useEffect, useState } from "react";
+import {
+   Text,
+   View,
+   StyleSheet,
+   ScrollView,
+   ActivityIndicator,
+   ImageBackground,
+} from "react-native";
 import { Stack, useLocalSearchParams } from "expo-router";
+import { FetchExercises } from "@/api/FetchExercises";
+
+interface Exercise {
+   name: string;
+   muscle: string;
+   equipment: string;
+   difficulty: string;
+   instructions: string;
+}
 
 function ExerciseDetails() {
-   const [isExpanded, setIsExpanded] = useState(false);
-   const params = useLocalSearchParams();
-   const exercise = exercises.find((item) => item.name === params.name);
+   const { name } = useLocalSearchParams<{ name: string }>();
+   const [exercise, setExercise] = useState<Exercise | null>(null);
+   const [loading, setLoading] = useState<boolean>(true);
+   const [error, setError] = useState<Error | null>(null);
+   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+
+   useEffect(() => {
+      const fetchExercise = async () => {
+         setLoading(true);
+         try {
+            const data = await FetchExercises({ name });
+            const foundExercise = data.length ? data[0] : null;
+            setExercise(foundExercise);
+         } catch (err) {
+            setError(err as Error);
+         } finally {
+            setLoading(false);
+         }
+      };
+
+      fetchExercise();
+   }, [name]);
+
+   if (loading) {
+      return <ActivityIndicator size="large" color="#fff" />;
+   }
+
+   if (error) {
+      return <Text style={styles.errorText}>Error: {error.message}</Text>;
+   }
 
    if (!exercise) {
       return <Text style={styles.errorText}>Exercise not found</Text>;
@@ -33,34 +75,51 @@ function ExerciseDetails() {
          </View>
          <View style={styles.instructionsContainer}>
             <Text style={styles.label}>Instructions:</Text>
-            <Text style={styles.instructions} numberOfLines={isExpanded ? 0 : 3}>
+            <Text
+               style={styles.instructions}
+               numberOfLines={isExpanded ? 0 : 3}
+            >
                {exercise.instructions}
             </Text>
-            <Text style={styles.label} onPress={() => setIsExpanded(!isExpanded)}>{isExpanded ? "Read less" : "Read more"}</Text>
+            <Text
+               style={styles.label}
+               onPress={() => setIsExpanded(!isExpanded)}
+            >
+               {isExpanded ? "Read less" : "Read more"}
+            </Text>
          </View>
       </ScrollView>
    );
 }
 
 const styles = StyleSheet.create({
+   // backgroundImage: {
+   //    flex: 1,
+   //    resizeMode: "cover",
+   //    justifyContent: "center",
+   //    alignItems: "center",
+   //    // opacity: 0.9,
+   // },
+
    container: {
-      padding: 20,
-      backgroundColor: "#f5f5f5",
+      flex: 1,
+      // padding: 20,
+      backgroundColor: "#222", // Dark background
    },
    headerContainer: {
       marginBottom: 20,
       borderBottomWidth: 2,
-      borderBottomColor: "#ccc", // Light gray border
+      borderBottomColor: "#444", // Lighter border for contrast
    },
    header: {
       fontSize: 28,
       fontWeight: "bold",
-      color: "#333",
+      color: "#fff", // White text
       textAlign: "center",
    },
    detailsContainer: {
       marginBottom: 20,
-      backgroundColor: "#f0f0f0",
+      backgroundColor: "#333", // Slightly darker background for details
       padding: 10,
       borderRadius: 10,
    },
@@ -68,14 +127,15 @@ const styles = StyleSheet.create({
       fontSize: 18,
       fontWeight: "bold",
       marginTop: 10,
-      color: "#444",
+      color: "#ddd", // Light gray text for labels
    },
    value: {
       fontWeight: "normal",
-      color: "#444",
+      color: "#ddd", // Light gray text for values
    },
+
    instructionsContainer: {
-      backgroundColor: "#f8f8f8",
+      backgroundColor: "#242c40",
       padding: 10,
       borderRadius: 10,
    },
@@ -95,5 +155,3 @@ const styles = StyleSheet.create({
 });
 
 export default ExerciseDetails;
-
-
