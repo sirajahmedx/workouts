@@ -11,7 +11,7 @@ import {
    TouchableOpacity,
    ImageBackground,
 } from "react-native";
-import { Appearance, useColorScheme } from "react-native";
+// import { Appearance, useColorScheme } from "react-native";
 
 import Exercise from "@/components/Exercise";
 import { FetchExercises } from "@/api/FetchExercises";
